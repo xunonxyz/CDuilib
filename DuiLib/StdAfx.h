@@ -63,10 +63,6 @@
 #define MIN min
 #define CLAMP(x,a,b) (MIN(b,MAX(a,x)))
 
-#define DUI_DECLARE_NON_COPYABLE(className) \
-    className (const className&); \
-    className& operator= (const className&);
-
 #define DUI_EQ_ATTRNAME(val) _tcsicmp(pstrName, _T(val)) == 0
 #define DUI_ATTR_IS_TRUE _tcsicmp(pstrValue, _T("true")) == 0
 

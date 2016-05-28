@@ -67,7 +67,7 @@ void CEventSource::operator+= (FnType pFn)
     (*this) += MakeDelegate(pFn);
 }
 
-void CEventSource::operator-= (const CDelegateBase& d) 
+void CEventSource::operator -= (const CDelegateBase& d) 
 {
     for( int i = 0; i < m_aDelegates.GetSize(); i++ ) {
         CDelegateBase* pObject = static_cast<CDelegateBase*>(m_aDelegates[i]);

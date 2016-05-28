@@ -810,7 +810,7 @@ namespace DuiLib {
 
 	CRichEditUI* CPaintManagerUI::GetCurrentCaretObject()
 	{
-		return m_currentCaretObject;
+		return dynamic_cast<CRichEditUI*>(m_currentCaretObject.get());
 	}
 
 	bool CPaintManagerUI::CreateCaret(HBITMAP hBmp, int nWidth, int nHeight)
@@ -835,12 +835,14 @@ namespace DuiLib {
 			return;
 		}
 
-		if(m_bCaretActive && m_bCaretShowing && m_currentCaretObject)
+		if(m_bCaretActive 
+			&& m_bCaretShowing 
+			&& m_currentCaretObject)
 		{
 			RECT temp = {};
 			if(::IntersectRect(&temp, &rcPaint, &m_rtCaret))
 			{
-				DWORD dwColor = m_currentCaretObject->GetTextColor();
+				DWORD dwColor = dynamic_cast<CRichEditUI*>(m_currentCaretObject.get())->GetTextColor();
 				if(dwColor == 0) dwColor = m_ResInfo.m_dwDefaultFontColor;
 				CRenderEngine::DrawColor(hDC, temp, dwColor);
 			}
@@ -882,19 +884,21 @@ namespace DuiLib {
 				return true;
 			}
 		}
-		switch( uMsg ) {
+		switch( uMsg ) 
+		{
 		case WM_KEYDOWN:
 			{
 				// Tabbing between controls
 				if( wParam == VK_TAB ) {
 					if( m_pFocus && m_pFocus->IsVisible() && m_pFocus->IsEnabled() && _tcsstr(m_pFocus->GetClass(), _T("RichEditUI")) != NULL ) {
-						if( static_cast<CRichEditUI*>(m_pFocus)->IsWantTab() ) return false;
+						if( static_cast<CRichEditUI*>(m_pFocus.get())->IsWantTab() ) return false;
 					}
 					SetNextTabControl(::GetKeyState(VK_SHIFT) >= 0);
 					return true;
 				}
 			}
 			break;
+
 		case WM_SYSCHAR:
 			{
 				// Handle ALT-shortcut key-combinations
@@ -1585,7 +1589,7 @@ namespace DuiLib {
 				event.pSender = m_pEventClick;
 				event.ptMouse = pt;
 				event.wKeyState = (WORD)wParam;
-				event.lParam = (LPARAM)m_pEventClick;
+				event.lParam = (LPARAM)m_pEventClick.get();
 				event.dwTimestamp = ::GetTickCount();
 				m_pEventClick->Event(event);
 				m_pEventClick = NULL;
@@ -1801,11 +1805,13 @@ namespace DuiLib {
 		KillTimer(pControl);
 		const CDuiString& sName = pControl->GetName();
 		if( !sName.IsEmpty() ) {
-			if( pControl == FindControl(sName) ) m_mNameHash.Remove(sName);
+			if( pControl == FindControl(sName) )
+				m_mNameHash.Remove(sName);
 		}
 		for( int i = 0; i < m_aAsyncNotify.GetSize(); i++ ) {
 			TNotifyUI* pMsg = static_cast<TNotifyUI*>(m_aAsyncNotify[i]);
-			if( pMsg->pSender == pControl ) pMsg->pSender = NULL;
+			if( pMsg->pSender == pControl )
+				pMsg->pSender = NULL;
 		}    
 	}
 

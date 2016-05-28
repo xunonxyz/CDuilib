@@ -5,9 +5,6 @@
 
 namespace DuiLib
 {
-	//////////////////////////////////////////////////////////////////////////
-
-
 	DUI_BEGIN_MESSAGE_MAP(WindowImplBase,CNotifyPump)
 		DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnClick)
 	DUI_END_MESSAGE_MAP()
@@ -261,7 +258,7 @@ namespace DuiLib
 		}
 
 		if (pRoot == NULL) {
-			CDuiString sError = _T("加载资源文件失败：");
+			CDuiString sError = _T("Load Resource Error：");
 			sError += GetSkinFile();
 			MessageBox(NULL, sError, _T("Duilib") ,MB_OK|MB_ICONERROR);
 			ExitProcess(1);

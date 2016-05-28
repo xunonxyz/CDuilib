@@ -29,6 +29,10 @@
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 
+#define DUI_DECLARE_NON_COPYABLE(className) \
+    className (const className&);\
+    className& operator= (const className&);
+
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
@@ -47,6 +51,9 @@
 #include "Utils/UIShadow.h"
 #include "Utils/UIDelegate.h"
 #include "Utils/DragDropImpl.h"
+#include "Utils/DuiRefCounterObject.h"
+#include "Utils/DUiWeakReference.h"
+
 #include "Core/UIDefine.h"
 #include "Core/UIResourceManager.h"
 #include "Core/UIManager.h"

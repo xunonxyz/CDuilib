@@ -3,16 +3,12 @@
 
 #pragma once
 
-namespace DuiLib {
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
-
+namespace DuiLib
+{
 	class CControlUI;
 	class CRichEditUI;
 	class CIDropTarget;
 
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
 	enum UILIB_RESTYPE
 	{
 		UILIB_FILE=1,		// 来自磁盘文件
@@ -20,8 +16,6 @@ namespace DuiLib {
 		UILIB_RESOURCE,		// 来自资源
 		UILIB_ZIPRESOURCE,	// 来自资源的zip压缩包
 	};
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
 
 	enum EVENTTYPE_UI
 	{
@@ -57,9 +51,6 @@ namespace DuiLib {
 		UIEVENT__LAST,
 	};
 
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
-
 	// Flags for CControlUI::GetControlFlags()
 #define UIFLAG_TABSTOP       0x00000001
 #define UIFLAG_SETCURSOR     0x00000002
@@ -74,7 +65,7 @@ namespace DuiLib {
 #define UIFIND_TOP_FIRST     0x00000010
 #define UIFIND_ME_FIRST      0x80000000
 
-	// Flags used for controlling the paint
+// Flags used for controlling the paint
 #define UISTATE_FOCUSED      0x00000001
 #define UISTATE_SELECTED     0x00000002
 #define UISTATE_DISABLED     0x00000004
@@ -82,11 +73,6 @@ namespace DuiLib {
 #define UISTATE_PUSHED       0x00000010
 #define UISTATE_READONLY     0x00000020
 #define UISTATE_CAPTURED     0x00000040
-
-
-
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
 
 	typedef struct UILIB_API tagTFontInfo
 	{
@@ -175,7 +161,7 @@ namespace DuiLib {
 	typedef struct UILIB_API tagTEventUI
 	{
 		int Type;
-		CControlUI* pSender;
+		WeakReference<CControlUI> pSender;
 		DWORD dwTimestamp;
 		POINT ptMouse;
 		TCHAR chKey;
@@ -481,18 +467,17 @@ namespace DuiLib {
 		RECT m_rtCaret;
 		bool m_bCaretActive;
 		bool m_bCaretShowing;
-		CRichEditUI* m_currentCaretObject;
+		WeakReference<CControlUI> m_currentCaretObject;
 
 		// 窗口阴影
 		CShadowUI m_shadow;
 		
-		//
 		CControlUI* m_pRoot;
-		CControlUI* m_pFocus;
-		CControlUI* m_pEventHover;
-		CControlUI* m_pEventClick;
-		CControlUI* m_pEventKey;
-		//
+		WeakReference<CControlUI> m_pFocus;
+		WeakReference<CControlUI> m_pEventHover;
+		WeakReference<CControlUI> m_pEventClick;
+		WeakReference<CControlUI> m_pEventKey;
+
 		POINT m_ptLastMousePos;
 		SIZE m_szMinWindow;
 		SIZE m_szMaxWindow;
@@ -511,14 +496,13 @@ namespace DuiLib {
 		RECT m_rcLayeredInset;
 		bool m_bLayeredChanged;
 		RECT m_rcLayeredUpdate;
-		//TDrawInfo m_diLayered;
 
 		bool m_bMouseTracking;
 		bool m_bMouseCapture;
 		bool m_bIsPainting;
 		bool m_bUsedVirtualWnd;
 
-		//
+		//这里需要全部替换掉
 		CStdPtrArray m_aNotifiers;
 		CStdPtrArray m_aTimers;
 		CStdPtrArray m_aTranslateAccelerator;
@@ -529,6 +513,7 @@ namespace DuiLib {
 		CStdPtrArray m_aDelayedCleanup;
 		CStdPtrArray m_aAsyncNotify;
 		CStdPtrArray m_aFoundControls;
+
 		CStdStringPtrMap m_mNameHash;
 		CStdStringPtrMap m_mWindowCustomAttrHash;
 		CStdStringPtrMap m_mOptionGroup;
@@ -540,7 +525,6 @@ namespace DuiLib {
 		bool m_bDragMode;
 		HBITMAP m_hDragBitmap;
 
-		//
 		static HINSTANCE m_hInstance;
 		static HINSTANCE m_hResourceInstance;
 		static CDuiString m_pStrResourcePath;
@@ -556,7 +540,6 @@ namespace DuiLib {
 		static CStdPtrArray m_aPreMessages;
 		static CStdPtrArray m_aPlugins;
 	};
+} 
 
-} // namespace DuiLib
-
-#endif // __UIMANAGER_H__
+#endif

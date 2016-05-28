@@ -3,11 +3,8 @@
 
 #pragma once
 
-namespace DuiLib {
-
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
-
+namespace DuiLib 
+{
 	typedef CControlUI* (CALLBACK* FINDCONTROLPROC)(CControlUI*, LPVOID);
 
 	class UILIB_API CControlUI
@@ -16,6 +13,28 @@ namespace DuiLib {
 	public:
 		CControlUI();
 		virtual ~CControlUI();
+
+		//==============================================================================
+		/** A class to keep an eye on a component and check for it being deleted.
+
+		This is designed for use with the ListenerList::callChecked() methods, to allow
+		the list iterator to stop cleanly if the component is deleted by a listener callback
+		while the list is still being iterated.
+		*/
+		class UILIB_API  BailOutChecker
+		{
+		public:
+			/** Creates a checker that watches one component. */
+			BailOutChecker(CControlUI* pControl);
+
+			/** Returns true if either of the two components have been deleted since this object was created. */
+			bool shouldBailOut() const noexcept;
+
+		private:
+			const WeakReference<CControlUI> safePointer;
+
+			DUI_DECLARE_NON_COPYABLE(BailOutChecker)
+		};
 
 	public:
 		virtual CDuiString GetName() const;
@@ -245,8 +264,10 @@ namespace DuiLib {
 		RECT m_rcPaint;
 		RECT m_rcBorderSize;
 	    HINSTANCE m_instance;
+
+		friend class WeakReference<CControlUI>;
+		WeakReference<CControlUI>::Master masterReference;
 	};
+}
 
-} // namespace DuiLib
-
-#endif // __UICONTROL_H__
+#endif 

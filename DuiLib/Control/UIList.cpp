@@ -1,10 +1,7 @@
 #include "StdAfx.h"
 
-namespace DuiLib {
-
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
-	//
+namespace DuiLib 
+{
 	IMPLEMENT_DUICONTROL(CListUI)
 
 	CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m_iExpandedItem(-1), m_bMultiSel(false)

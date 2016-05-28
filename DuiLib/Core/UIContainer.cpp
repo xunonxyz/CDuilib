@@ -2,10 +2,6 @@
 
 namespace DuiLib
 {
-
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
-	//
 	IMPLEMENT_DUICONTROL(CContainerUI)
 
 	CContainerUI::CContainerUI()
@@ -81,7 +77,9 @@ namespace DuiLib
 	{
 		if( pControl == NULL) return false;
 
-		if( m_pManager != NULL ) m_pManager->InitControls(pControl, this);
+		if( m_pManager != NULL ) 
+			m_pManager->InitControls(pControl, this);
+
 		if( IsVisible() ) NeedUpdate();
 		else pControl->SetInternVisible(false);
 		return m_items.Add(pControl);   

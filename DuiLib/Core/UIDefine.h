@@ -37,7 +37,7 @@ namespace DuiLib
 	{
 		CDuiString sType;
 		CDuiString sVirtualWnd;
-		CControlUI* pSender;
+		WeakReference<CControlUI> pSender;
 		DWORD dwTimestamp;
 		POINT ptMouse;
 		WPARAM wParam;

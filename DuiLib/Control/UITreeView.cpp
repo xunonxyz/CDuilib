@@ -955,7 +955,7 @@ namespace DuiLib
 		TNotifyUI* pMsg = (TNotifyUI*)param;
 		if(pMsg->sType == DUI_MSGTYPE_SELECTCHANGED)
 		{
-			CCheckBoxUI* pCheckBox = (CCheckBoxUI*)pMsg->pSender;
+			CCheckBoxUI* pCheckBox = dynamic_cast<CCheckBoxUI*>(pMsg->pSender.get());
 			CTreeNodeUI* pItem = (CTreeNodeUI*)pCheckBox->GetParent()->GetParent();
 			SetItemCheckBox(pCheckBox->GetCheck(),pItem);
 			return TRUE;
@@ -974,7 +974,7 @@ namespace DuiLib
 		TNotifyUI* pMsg = (TNotifyUI*)param;
 		if(pMsg->sType == DUI_MSGTYPE_SELECTCHANGED)
 		{
-			CCheckBoxUI* pFolder = (CCheckBoxUI*)pMsg->pSender;
+			CCheckBoxUI* pFolder = dynamic_cast<CCheckBoxUI*>(pMsg->pSender.get());
 			CTreeNodeUI* pItem = (CTreeNodeUI*)pFolder->GetParent()->GetParent();
 			pItem->SetVisibleTag(!pFolder->GetCheck());
 			SetItemExpand(!pFolder->GetCheck(),pItem);
@@ -994,7 +994,7 @@ namespace DuiLib
 		TNotifyUI* pMsg = (TNotifyUI*)param;
 		if(_tcsicmp(pMsg->sType, DUI_MSGTYPE_TREEITEMDBCLICK) == 0)
 		{
-			CTreeNodeUI* pItem		= static_cast<CTreeNodeUI*>(pMsg->pSender);
+			CTreeNodeUI* pItem		= dynamic_cast<CTreeNodeUI*>(pMsg->pSender.get());
 			CCheckBoxUI* pFolder	= pItem->GetFolderButton();
 			pFolder->Selected(!pFolder->IsSelected());
 			pItem->SetVisibleTag(!pFolder->GetCheck());

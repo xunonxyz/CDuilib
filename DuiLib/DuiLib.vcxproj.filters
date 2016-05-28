@@ -350,8 +350,11 @@
     <ClInclude Include="Control\UIListEx.h">
       <Filter>Header Files\Control</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\DuiRefCounter.h">
+    <ClInclude Include="Utils\DuiRefCounterObject.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\DUiWeakReference.h">
+      <Filter>Source Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

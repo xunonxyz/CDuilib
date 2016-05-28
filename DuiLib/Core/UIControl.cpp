@@ -1,10 +1,11 @@
 #include "StdAfx.h"
 
-namespace DuiLib {
+namespace DuiLib 
+{
 	IMPLEMENT_DUICONTROL(CControlUI)
 
-		CControlUI::CControlUI()
-		:m_pManager(NULL), 
+	CControlUI::CControlUI()
+		: m_pManager(NULL), 
 		m_pParent(NULL), 
 		m_bUpdateNeeded(true),
 		m_bMenuUsed(false),
@@ -44,13 +45,15 @@ namespace DuiLib {
 		::ZeroMemory(&m_rcPaint, sizeof(RECT));
 		::ZeroMemory(&m_rcBorderSize,sizeof(RECT));
 		m_piFloatPercent.left = m_piFloatPercent.top = m_piFloatPercent.right = m_piFloatPercent.bottom = 0.0f;
-
 	}
 
 	CControlUI::~CControlUI()
 	{
 		if( OnDestroy ) OnDestroy(this);
-		if( m_pManager != NULL ) m_pManager->ReapObjects(this);
+		if( m_pManager != NULL )
+			m_pManager->ReapObjects(this);
+
+		masterReference.clear();
 	}
 
 	CDuiString CControlUI::GetName() const
@@ -769,7 +772,8 @@ namespace DuiLib {
 	void CControlUI::Init()
 	{
 		DoInit();
-		if( OnInit ) OnInit(this);
+		if( OnInit )
+			OnInit(this);
 	}
 
 	void CControlUI::DoInit()
@@ -784,42 +788,53 @@ namespace DuiLib {
 
 	void CControlUI::DoEvent(TEventUI& event)
 	{
-		if( event.Type == UIEVENT_SETCURSOR ) {
-			if( GetCursor() ) {
-				::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(GetCursor())));
+		switch (event.Type)
+		{
+			case UIEVENT_SETCURSOR:
+			{
+				if (GetCursor()) {
+					::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(GetCursor())));
+				}
+				else {
+					::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+				}
 			}
-			else {
-				::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
-			}
-			return;
-		}
+			break;
 
-		if( event.Type == UIEVENT_SETFOCUS ) 
-		{
-			m_bFocused = true;
-			Invalidate();
-			return;
-		}
-		if( event.Type == UIEVENT_KILLFOCUS ) 
-		{
-			m_bFocused = false;
-			Invalidate();
-			return;
-		}
-		if( event.Type == UIEVENT_TIMER )
-		{
-			m_pManager->SendNotify(this, DUI_MSGTYPE_TIMER, event.wParam, event.lParam);
-			return;
-		}
-		if( event.Type == UIEVENT_CONTEXTMENU )
-		{
-			if( IsContextMenuUsed() ) {
-				m_pManager->SendNotify(this, DUI_MSGTYPE_MENU, event.wParam, event.lParam);
+			case UIEVENT_SETFOCUS:
+			{
+				m_bFocused = true;
+				Invalidate();
 				return;
 			}
-		}
+			break;
 
-		if( m_pParent != NULL ) m_pParent->DoEvent(event);
+			case UIEVENT_KILLFOCUS:
+			{
+				m_bFocused = false;
+				Invalidate();
+			}
+			break;
+
+			case UIEVENT_TIMER:
+			{
+				m_pManager->SendNotify(this, DUI_MSGTYPE_TIMER, event.wParam, event.lParam);
+			}
+			break;
+
+			case UIEVENT_CONTEXTMENU:
+			{
+				if (IsContextMenuUsed()) 
+					m_pManager->SendNotify(this, DUI_MSGTYPE_MENU, event.wParam, event.lParam);
+			}
+			break;
+
+			default:
+			{
+				if (m_pParent != NULL)
+					m_pParent->DoEvent(event);
+			}
+		}
 	}
 
 
@@ -1267,5 +1282,4 @@ namespace DuiLib {
 		m_nBorderStyle = nStyle;
 		Invalidate();
 	}
-
-} // namespace DuiLib
+} 

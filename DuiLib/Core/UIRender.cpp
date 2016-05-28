@@ -3,21 +3,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "..\Utils\stb_image.h"
 
-#ifdef USE_XIMAGE_EFFECT
-#	include "../../3rd/CxImage/ximage.h"
-#	include "../../3rd/CxImage/ximage.cpp"
-#	include "../../3rd/CxImage/ximaenc.cpp"
-#	include "../../3rd/CxImage/ximagif.cpp"
-#	include "../../3rd/CxImage/ximainfo.cpp"
-#	include "../../3rd/CxImage/ximalpha.cpp"
-#	include "../../3rd/CxImage/ximapal.cpp"
-#	include "../../3rd/CxImage/ximatran.cpp"
-#	include "../../3rd/CxImage/ximawnd.cpp"
-#	include "../../3rd/CxImage/xmemfile.cpp"
-#endif
-
 ///////////////////////////////////////////////////////////////////////////////////////
-DECLARE_HANDLE(HZIP);	// An HZIP identifies a zip file that has been opened
+DECLARE_HANDLE(HZIP);			// An HZIP identifies a zip file that has been opened
 typedef DWORD ZRESULT;
 typedef struct
 { 
@@ -107,7 +94,6 @@ namespace DuiLib {
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////
-
 	static const float OneThird = 1.0f / 3;
 
 	static void RGBtoHSL(DWORD ARGB, float* H, float* S, float* L) {
@@ -187,9 +173,7 @@ namespace DuiLib {
 		lpbiSrc->bmiHeader.biClrImportant = 0;
 
 		COLORREF* pSrcBits = NULL;
-		HBITMAP hSrcDib = CreateDIBSection (
-			hSrcDC, lpbiSrc, DIB_RGB_COLORS, (void **)&pSrcBits,
-			NULL, NULL);
+		HBITMAP hSrcDib = CreateDIBSection (hSrcDC, lpbiSrc, DIB_RGB_COLORS, (void **)&pSrcBits, NULL, NULL);
 
 		if ((NULL == hSrcDib) || (NULL == pSrcBits)) 
 		{
@@ -233,7 +217,7 @@ namespace DuiLib {
 
 		if ((NULL == hDestDib) || (NULL == pDestBits))
 		{
-			delete [] lpbiSrc;
+			delete[] lpbiSrc;
 			::DeleteObject(hSrcDib);
 			::DeleteDC(hTempDC);
 			return FALSE;
@@ -258,7 +242,7 @@ namespace DuiLib {
 		::BitBlt (hDC, nDestX, nDestY, dwWidth, dwHeight, hTempDC, 0, 0, SRCCOPY);
 		::SelectObject (hTempDC, hOldTempBmp);
 
-		delete [] lpbiDest;
+		delete[] lpbiDest;
 		::DeleteObject(hDestDib);
 
 		delete [] lpbiSrc;
@@ -826,10 +810,11 @@ namespace DuiLib {
 
 		LPCTSTR pStrPath = pStrImage;
 		if( type == NULL ) 
-		{
 			pStrPath = CResourceManager::GetInstance()->GetImagePath(pStrImage);
-		}
-		if (pStrPath == NULL) pStrPath =pStrImage;
+
+		if (pStrPath == NULL)
+			pStrPath =pStrImage;
+
 		return LoadImage(STRINGorID(pStrPath), type, mask, instance);
 	}
 
@@ -842,8 +827,11 @@ namespace DuiLib {
 		int iFont, UINT uStyle, DWORD dwTextBKColor, BOOL bTransparent)
 	{
 		if( pstrText == NULL || pManager == NULL ) return;
-		if(bTransparent) ::SetBkMode(hDC, TRANSPARENT);
-		else ::SetBkMode(hDC, OPAQUE);
+		if(bTransparent)
+			::SetBkMode(hDC, TRANSPARENT);
+		else 
+			::SetBkMode(hDC, OPAQUE);
+
 		::SetBkColor(hDC, RGB(GetBValue(dwTextBKColor), GetGValue(dwTextBKColor), GetRValue(dwTextBKColor)));
 		::SetTextColor(hDC, RGB(GetBValue(dwTextColor), GetGValue(dwTextColor), GetRValue(dwTextColor)));
 		HFONT hOldFont = (HFONT)::SelectObject(hDC, pManager->GetFont(iFont));
@@ -1302,7 +1290,8 @@ namespace DuiLib {
 
 	bool CRenderEngine::DrawImageInfo(HDC hDC, CPaintManagerUI* pManager, const RECT& rcItem, const RECT& rcPaint, const TDrawInfo* pDrawInfo, HINSTANCE instance)
 	{
-		if( pManager == NULL || hDC == NULL || pDrawInfo == NULL ) return false;
+		if( pManager == NULL || hDC == NULL || pDrawInfo == NULL )
+			return false;
 
 		RECT rcDest = rcItem;
 		if( pDrawInfo->rcDest.left != 0 || pDrawInfo->rcDest.top != 0 ||
@@ -1320,7 +1309,9 @@ namespace DuiLib {
 
 	bool CRenderEngine::DrawImageString(HDC hDC, CPaintManagerUI* pManager, const RECT& rcItem, const RECT& rcPaint, LPCTSTR pStrImage, LPCTSTR pStrModify, HINSTANCE instance)
 	{
-		if ((pManager == NULL) || (hDC == NULL)) return false;
+		if ((pManager == NULL) || (hDC == NULL)) 
+			return false;
+
 		const TDrawInfo* pDrawInfo = pManager->GetDrawInfo(pStrImage, pStrModify);
 		return DrawImageInfo(hDC, pManager, rcItem, rcPaint, pDrawInfo, instance);
 	}
@@ -1505,6 +1496,7 @@ namespace DuiLib {
 			else {
 				stringFormat.SetAlignment(Gdiplus::StringAlignmentNear);
 			}
+
 			stringFormat.GenericTypographic();
 			if ((uStyle & DT_TOP) != 0) {
 				stringFormat.SetLineAlignment(Gdiplus::StringAlignmentNear);
@@ -1518,11 +1510,11 @@ namespace DuiLib {
 			else {
 				stringFormat.SetLineAlignment(Gdiplus::StringAlignmentNear);
 			}
+
 #ifdef UNICODE
 			if ((uStyle & DT_CALCRECT) != 0)
 			{
 				Gdiplus::RectF bounds;
-
 				graphics.MeasureString(pstrText, -1, &font, rectF, &stringFormat, &bounds);
 
 				// MeasureString存在计算误差，这里加一像素
@@ -1530,9 +1522,7 @@ namespace DuiLib {
 				rc.right = rc.left + (long)bounds.Width + 1;
 			}
 			else
-			{
 				graphics.DrawString(pstrText, -1, &font, rectF, &stringFormat, &brush);
-			}
 #else
 			DWORD dwSize = MultiByteToWideChar(CP_ACP, 0, pstrText, -1, NULL, 0);
 			WCHAR * pcwszDest = new WCHAR[dwSize + 1];
@@ -1551,7 +1541,7 @@ namespace DuiLib {
 				{
 					graphics.DrawString(pcwszDest, -1, &font, rectF, &stringFormat, &brush);
 				}
-				delete []pcwszDest;
+				delete[] pcwszDest;
 			}
 #endif
 			::SelectObject(hDC, hOldFont);
@@ -2301,6 +2291,7 @@ namespace DuiLib {
 		::SelectObject(hDC, hOldFont);
 		return size;
 	}
+
 
 	void CRenderEngine::CheckAlphaColor(DWORD& dwColor)
 	{

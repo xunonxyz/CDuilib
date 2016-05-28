@@ -180,6 +180,9 @@ namespace DuiLib {
 		CDuiString m_sTipValue;
 		DWORD m_dwTipValueColor;
 		UINT m_uTipValueAlign;
+
+		//friend class WeakReference<CRichEditUI>;
+		//WeakReference<CRichEditUI>::Master masterReference;
 	};
 
 } // namespace DuiLib
